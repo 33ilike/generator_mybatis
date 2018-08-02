@@ -1,2 +1,10 @@
-/.settings/
+/target/
+.idea
+/.settings
+/log
+/.classpath
 /.project
+/bin/
+src/main/webapp/build
+src/main/webapp/static
+*.iml
