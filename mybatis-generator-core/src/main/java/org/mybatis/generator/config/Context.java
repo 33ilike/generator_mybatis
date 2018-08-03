@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2017 the original author or authors.
+ *    Copyright 2006-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -70,6 +70,14 @@ public class Context extends PropertyHolder {
     /** The java client generator configuration. */
     private JavaClientGeneratorConfiguration javaClientGeneratorConfiguration;
 
+
+    private JavaServiceImplGeneratorConfiguration javaServiceImplGeneratorConfiguration;
+
+    private JavaIServiceGeneratorConfiguration javaIServiceGeneratorConfiguration;
+
+    private JavaControllerGeneratorConfiguration javaControllerGeneratorConfiguration;
+
+
     /** The table configurations. */
     private ArrayList<TableConfiguration> tableConfigurations;
 
@@ -127,6 +135,32 @@ public class Context extends PropertyHolder {
         tableConfigurations = new ArrayList<TableConfiguration>();
         pluginConfigurations = new ArrayList<PluginConfiguration>();
     }
+
+
+    public JavaServiceImplGeneratorConfiguration getJavaServiceImplGeneratorConfiguration() {
+        return javaServiceImplGeneratorConfiguration;
+    }
+
+    public void setJavaServiceImplGeneratorConfiguration(JavaServiceImplGeneratorConfiguration javaServiceImplGeneratorConfiguration) {
+        this.javaServiceImplGeneratorConfiguration = javaServiceImplGeneratorConfiguration;
+    }
+
+    public JavaIServiceGeneratorConfiguration getJavaIServiceGeneratorConfiguration() {
+        return javaIServiceGeneratorConfiguration;
+    }
+
+    public void setJavaIServiceGeneratorConfiguration(JavaIServiceGeneratorConfiguration javaIServiceGeneratorConfiguration) {
+        this.javaIServiceGeneratorConfiguration = javaIServiceGeneratorConfiguration;
+    }
+
+    public JavaControllerGeneratorConfiguration getJavaControllerGeneratorConfiguration() {
+        return javaControllerGeneratorConfiguration;
+    }
+
+    public void setJavaControllerGeneratorConfiguration(JavaControllerGeneratorConfiguration javaControllerGeneratorConfiguration) {
+        this.javaControllerGeneratorConfiguration = javaControllerGeneratorConfiguration;
+    }
+
 
     /**
      * Adds the table configuration.

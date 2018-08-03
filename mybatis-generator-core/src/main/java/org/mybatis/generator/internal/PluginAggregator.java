@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2017 the original author or authors.
+ *    Copyright 2006-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -880,7 +880,7 @@ public final class PluginAggregator implements Plugin {
     public boolean modelFieldGenerated(Field field,
             TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn,
             IntrospectedTable introspectedTable,
-            Plugin.ModelClassType modelClassType) {
+            ModelClassType modelClassType) {
         boolean rc = true;
 
         for (Plugin plugin : plugins) {
@@ -897,7 +897,7 @@ public final class PluginAggregator implements Plugin {
     public boolean modelGetterMethodGenerated(Method method,
             TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn,
             IntrospectedTable introspectedTable,
-            Plugin.ModelClassType modelClassType) {
+            ModelClassType modelClassType) {
         boolean rc = true;
 
         for (Plugin plugin : plugins) {
@@ -914,7 +914,7 @@ public final class PluginAggregator implements Plugin {
     public boolean modelSetterMethodGenerated(Method method,
             TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn,
             IntrospectedTable introspectedTable,
-            Plugin.ModelClassType modelClassType) {
+            ModelClassType modelClassType) {
         boolean rc = true;
 
         for (Plugin plugin : plugins) {

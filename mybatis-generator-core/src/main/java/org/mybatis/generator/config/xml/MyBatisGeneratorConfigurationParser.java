@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2017 the original author or authors.
+ *    Copyright 2006-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -37,27 +37,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 
-import org.mybatis.generator.config.ColumnOverride;
-import org.mybatis.generator.config.ColumnRenamingRule;
-import org.mybatis.generator.config.CommentGeneratorConfiguration;
-import org.mybatis.generator.config.Configuration;
-import org.mybatis.generator.config.ConnectionFactoryConfiguration;
-import org.mybatis.generator.config.Context;
-import org.mybatis.generator.config.GeneratedKey;
-import org.mybatis.generator.config.IgnoredColumn;
-import org.mybatis.generator.config.IgnoredColumnException;
-import org.mybatis.generator.config.IgnoredColumnPattern;
-import org.mybatis.generator.config.JDBCConnectionConfiguration;
-import org.mybatis.generator.config.JavaClientGeneratorConfiguration;
-import org.mybatis.generator.config.JavaModelGeneratorConfiguration;
-import org.mybatis.generator.config.JavaTypeResolverConfiguration;
-import org.mybatis.generator.config.ModelType;
-import org.mybatis.generator.config.OneToMany;
-import org.mybatis.generator.config.OneToOne;
-import org.mybatis.generator.config.PluginConfiguration;
-import org.mybatis.generator.config.PropertyHolder;
-import org.mybatis.generator.config.SqlMapGeneratorConfiguration;
-import org.mybatis.generator.config.TableConfiguration;
+import org.mybatis.generator.config.*;
 import org.mybatis.generator.exception.XMLParserException;
 import org.mybatis.generator.internal.ObjectFactory;
 import org.w3c.dom.Element;
@@ -203,8 +183,96 @@ public class MyBatisGeneratorConfigurationParser {
                 parseSqlMapGenerator(context, childNode);
             } else if ("javaClientGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
                 parseJavaClientGenerator(context, childNode);
-            } else if ("table".equals(childNode.getNodeName())) { //$NON-NLS-1$
+            }
+
+            else if ("javaServiceImplGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseJavaServiceImplGenerator(context, childNode);
+            } else if ("javaIServiceGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseJavaIServiceGenerator(context, childNode);
+            }else if ("javaControllerGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseJavaControllerGenerator(context, childNode);
+            }
+
+            else if ("table".equals(childNode.getNodeName())) { //$NON-NLS-1$
                 parseTable(context, childNode);
+            }
+        }
+    }
+
+    private void parseJavaServiceImplGenerator(Context context, Node node) {
+        JavaServiceImplGeneratorConfiguration javaServiceImplGeneratorConfiguration = new JavaServiceImplGeneratorConfiguration();
+        context.setJavaServiceImplGeneratorConfiguration(javaServiceImplGeneratorConfiguration);
+
+        Properties attributes = parseAttributes(node);
+        String type = attributes.getProperty("type"); //$NON-NLS-1$
+        String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
+        String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
+
+        javaServiceImplGeneratorConfiguration.setTargetPackage(targetPackage);
+        javaServiceImplGeneratorConfiguration.setTargetProject(targetProject);
+
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(javaServiceImplGeneratorConfiguration, childNode);
+            }
+        }
+    }
+
+    private void parseJavaIServiceGenerator(Context context, Node node) {
+        JavaIServiceGeneratorConfiguration javaIServiceGeneratorConfiguration = new JavaIServiceGeneratorConfiguration();
+        context.setJavaIServiceGeneratorConfiguration(javaIServiceGeneratorConfiguration);
+
+        Properties attributes = parseAttributes(node);
+        String type = attributes.getProperty("type"); //$NON-NLS-1$
+        String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
+        String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
+
+        javaIServiceGeneratorConfiguration.setTargetPackage(targetPackage);
+        javaIServiceGeneratorConfiguration.setTargetProject(targetProject);
+
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(javaIServiceGeneratorConfiguration, childNode);
+            }
+        }
+    }
+
+    private void parseJavaControllerGenerator(Context context, Node node) {
+        JavaControllerGeneratorConfiguration javaControllerGeneratorConfiguration = new JavaControllerGeneratorConfiguration();
+        context.setJavaControllerGeneratorConfiguration(javaControllerGeneratorConfiguration);
+
+        Properties attributes = parseAttributes(node);
+        String type = attributes.getProperty("type"); //$NON-NLS-1$
+        String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
+        String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
+
+        javaControllerGeneratorConfiguration.setTargetPackage(targetPackage);
+        javaControllerGeneratorConfiguration.setTargetProject(targetProject);
+
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(javaControllerGeneratorConfiguration, childNode);
             }
         }
     }

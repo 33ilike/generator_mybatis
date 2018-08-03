@@ -1,0 +1,126 @@
+/**
+ *    Copyright 2006-2018 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.mybatis.generator.codegen.freemarker.TemplateEntity;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+
+/**
+ * Created by chenpengzhan on 2018/8/2.
+ */
+public class ServiceImplTemplateEntity implements TemplateEntity{
+    private String templatePackage;//包名
+    private String modelPackage;//所需要导入的model包
+    private String mapperPackage;//所需要导入的mapper包
+    private String className;//生成的ServiceImpl类名
+    private String mapperType;//对应的Mapper类
+    private String mapperName;//Mapper类的实例对象名
+    private String modelClazz;//对应的model类
+    private String modelName;//对应的model名
+    private String projectTargetPackage;//Service生成的目标工程包
+    private String generatedDate = new SimpleDateFormat("yyyy/MM/dd").format(new Date());//代码生成日期
+    private String generatedTime =  new SimpleDateFormat("HH:mm").format(new Date());//代码生成时间
+    private boolean columnsHasBLOB;//是否包含BLOB字段
+
+    public String getModelName() {
+        return modelName;
+    }
+
+    public void setModelName(String modelName) {
+        this.modelName = modelName;
+    }
+
+    public String getTemplatePackage() {
+        return templatePackage;
+    }
+
+    public void setTemplatePackage(String templatePackage) {
+        this.templatePackage = templatePackage;
+    }
+
+    public String getModelPackage() {
+        return modelPackage;
+    }
+
+    public void setModelPackage(String modelPackage) {
+        this.modelPackage = modelPackage;
+    }
+
+    public String getMapperPackage() {
+        return mapperPackage;
+    }
+
+    public void setMapperPackage(String mapperPackage) {
+        this.mapperPackage = mapperPackage;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public String getMapperType() {
+        return mapperType;
+    }
+
+    public void setMapperType(String mapperType) {
+        this.mapperType = mapperType;
+    }
+
+    public String getMapperName() {
+        return mapperName;
+    }
+
+    public void setMapperName(String mapperName) {
+        this.mapperName = mapperName;
+    }
+
+    public String getModelClazz() {
+        return modelClazz;
+    }
+
+    public void setModelClazz(String modelClazz) {
+        this.modelClazz = modelClazz;
+    }
+
+    public String getProjectTargetPackage() {
+        return projectTargetPackage;
+    }
+
+    public void setProjectTargetPackage(String projectTargetPackage) {
+        this.projectTargetPackage = projectTargetPackage;
+    }
+
+    public String getGeneratedDate() {
+        return generatedDate;
+    }
+
+    public String getGeneratedTime() {
+        return generatedTime;
+    }
+
+    public boolean isColumnsHasBLOB() {
+        return columnsHasBLOB;
+    }
+
+    public void setColumnsHasBLOB(boolean columnsHasBLOB) {
+        this.columnsHasBLOB = columnsHasBLOB;
+    }
+}

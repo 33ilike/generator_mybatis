@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2017 the original author or authors.
+ *    Copyright 2006-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -171,7 +171,7 @@ public class OneToManyPlugin extends PluginAdapter {
 				//添加查询方法<select id="testOutMapper" resultMap="soc.dao.ScanDao.BaseResultMap"><include refid="soc.dao.ScanDao.Base_Column_List" />
 				XmlElement selectEle=new XmlElement("select");
 				selectEle.addAttribute(new Attribute("id", "get"+domainName));
-				selectEle.addAttribute(new Attribute("resultMap", it.getMyBatis3SqlMapNamespace()+"."+"BaseResultMap"));
+				selectEle.addAttribute(new Attribute("resultType", getModelPackage(introspectedTable,context)+"."+tc.getDomainObjectName()));
 				String sql="select ";
 				for(IntrospectedColumn c:it.getAllColumns()){
 					sql+=c.getActualColumnName()+",";

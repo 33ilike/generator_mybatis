@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2017 the original author or authors.
+ *    Copyright 2006-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -210,7 +210,7 @@ public abstract class IntrospectedTable {
     protected Map<String, Object> attributes;
 
     /** Internal attributes are used to store commonly accessed items by all code generators. */
-    protected Map<IntrospectedTable.InternalAttribute, String> internalAttributes;
+    protected Map<InternalAttribute, String> internalAttributes;
     
     /**
      * Table remarks retrieved from database metadata
@@ -236,7 +236,7 @@ public abstract class IntrospectedTable {
         baseColumns = new ArrayList<IntrospectedColumn>();
         blobColumns = new ArrayList<IntrospectedColumn>();
         attributes = new HashMap<String, Object>();
-        internalAttributes = new HashMap<IntrospectedTable.InternalAttribute, String>();
+        internalAttributes = new HashMap<InternalAttribute, String>();
     }
 
     /**

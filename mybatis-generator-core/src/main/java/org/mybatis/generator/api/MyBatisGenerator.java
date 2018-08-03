@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2017 the original author or authors.
+ *    Copyright 2006-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 package org.mybatis.generator.api;
 
 import static org.mybatis.generator.internal.util.ClassloaderUtility.getCustomClassloader;
+import static org.mybatis.generator.internal.util.JavaBeansUtil.getCamelCaseString;
+import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
 import static org.mybatis.generator.internal.util.messages.Messages.getString;
 
 import java.io.BufferedWriter;
@@ -30,9 +32,14 @@ import java.util.List;
 import java.util.Set;
 
 import org.mybatis.generator.codegen.RootClassInfo;
-import org.mybatis.generator.config.Configuration;
-import org.mybatis.generator.config.Context;
-import org.mybatis.generator.config.MergeConstants;
+import org.mybatis.generator.codegen.freemarker.JavaDomainGenerator;
+import org.mybatis.generator.codegen.freemarker.JavaIServiceGenerator;
+import org.mybatis.generator.codegen.freemarker.JavaServiceGenerator;
+import org.mybatis.generator.codegen.freemarker.JavaServiceImplGenerator;
+import org.mybatis.generator.codegen.freemarker.TemplateEntity.IServiceTemplateEntity;
+import org.mybatis.generator.codegen.freemarker.TemplateEntity.ServiceImplTemplateEntity;
+import org.mybatis.generator.codegen.freemarker.TemplateEntity.ServiceTemplateEntity;
+import org.mybatis.generator.config.*;
 import org.mybatis.generator.exception.InvalidConfigurationException;
 import org.mybatis.generator.exception.ShellException;
 import org.mybatis.generator.internal.DefaultShellCallback;
@@ -270,6 +277,20 @@ public class MyBatisGenerator {
                     generatedXmlFiles, warnings);
         }
 
+        /**
+         * 如果JavaServiceGeneratorConfiguration存在则调用相关方法
+         * 如果JavaDomainGeneratorConfiguration存在则调用相关方法
+         */
+
+        for (Context c:configuration.getContexts()) {
+            if (c.getJavaServiceImplGeneratorConfiguration() != null) {
+                JavaServiceImplGenerator.addJavaServiceImplGenerator(assignmentServiceImplTemplateEntity());
+            }
+            if (c.getJavaIServiceGeneratorConfiguration() != null) {
+                JavaIServiceGenerator.addJavaIServiceGenerator(assignmentIServiceTemplateEntity());
+            }
+        }
+
         // now save the files
         if (writeFiles) {
             callback.saveStarted(generatedXmlFiles.size()
@@ -291,6 +312,78 @@ public class MyBatisGenerator {
         }
 
         callback.done();
+    }
+
+
+    public List<ServiceImplTemplateEntity> assignmentServiceImplTemplateEntity(){
+        List<Context> contexts = configuration.getContexts();
+        List<ServiceImplTemplateEntity> serviceImplTemplateEntities = new ArrayList();
+        boolean flag;
+        for (Context c:contexts){
+            JavaServiceImplGeneratorConfiguration jgc = c.getJavaServiceImplGeneratorConfiguration();
+            List<TableConfiguration> tableConfigurations = c.getTableConfigurations();
+            for (TableConfiguration t:tableConfigurations){
+                flag = false;
+                for (GeneratedJavaFile gjf : generatedJavaFiles) {
+                    if (gjf.getFileName().contains("WithBLOBs")&& gjf.getFileName().contains(t.getDomainObjectName())) {
+                        flag = true;
+                        break;
+                    }
+                }
+                String domainObjectName = this.getDomainObjectName(t);
+                ServiceImplTemplateEntity serviceImplTemplateEntity = new ServiceImplTemplateEntity();
+                serviceImplTemplateEntity.setClassName(domainObjectName+"ServiceImpl");
+                String projectTargetPackage = jgc.getTargetProject()+"/"+jgc.getTargetPackage().replaceAll("\\.","/")+"/";
+                serviceImplTemplateEntity.setProjectTargetPackage(projectTargetPackage);
+                serviceImplTemplateEntity.setTemplatePackage(jgc.getTargetPackage());
+                serviceImplTemplateEntity.setMapperType(domainObjectName+"Mapper");
+                serviceImplTemplateEntity.setMapperName(Character.toLowerCase(domainObjectName.charAt(0)) + domainObjectName.substring(1)+"Mapper");
+                serviceImplTemplateEntity.setModelName(Character.toLowerCase(domainObjectName.charAt(0)) + domainObjectName.substring(1));
+                serviceImplTemplateEntity.setModelClazz(domainObjectName);
+                serviceImplTemplateEntity.setMapperPackage(c.getJavaClientGeneratorConfiguration().getTargetPackage()+"."+domainObjectName+"Mapper");
+                serviceImplTemplateEntity.setModelPackage(c.getJavaModelGeneratorConfiguration().getTargetPackage()+"."+domainObjectName);
+                serviceImplTemplateEntity.setColumnsHasBLOB(flag);
+                serviceImplTemplateEntities.add(serviceImplTemplateEntity);
+            }
+        }
+        return serviceImplTemplateEntities;
+    }
+
+    public List<IServiceTemplateEntity> assignmentIServiceTemplateEntity(){
+        List<Context> contexts = configuration.getContexts();
+        List<IServiceTemplateEntity> iServiceTemplateEntities = new ArrayList();
+        boolean flag;
+        for (Context c:contexts){
+            JavaIServiceGeneratorConfiguration jgc = c.getJavaIServiceGeneratorConfiguration();
+            List<TableConfiguration> tableConfigurations = c.getTableConfigurations();
+            for (TableConfiguration t:tableConfigurations){
+                flag = false;
+                for (GeneratedJavaFile gjf : generatedJavaFiles) {
+                    if (gjf.getFileName().contains("WithBLOBs")&& gjf.getFileName().contains(t.getDomainObjectName())) {
+                        flag = true;
+                        break;
+                    }
+                }
+                String domainObjectName = this.getDomainObjectName(t);
+                IServiceTemplateEntity iServiceTemplateEntity = new IServiceTemplateEntity();
+                iServiceTemplateEntity.setClassName("I"+domainObjectName+"Service");
+                String projectTargetPackage = jgc.getTargetProject()+"/"+jgc.getTargetPackage().replaceAll("\\.","/")+"/";
+                iServiceTemplateEntity.setProjectTargetPackage(projectTargetPackage);
+                iServiceTemplateEntity.setTemplatePackage(jgc.getTargetPackage());
+                iServiceTemplateEntity.setModelName(Character.toLowerCase(domainObjectName.charAt(0)) + domainObjectName.substring(1));
+                iServiceTemplateEntity.setModelClazz(domainObjectName);
+                iServiceTemplateEntities.add(iServiceTemplateEntity);
+            }
+        }
+        return iServiceTemplateEntities;
+    }
+
+    public String getDomainObjectName(TableConfiguration t) {
+        if (stringHasValue(t.getDomainObjectName())) {
+            return t.getDomainObjectName();
+        } else {
+            return getCamelCaseString(t.getTableName(), true);
+        }
     }
 
     private void writeGeneratedJavaFile(GeneratedJavaFile gjf, ProgressCallback callback)

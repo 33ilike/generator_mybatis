@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2006-2017 the original author or authors.
+       Copyright 2006-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -48,6 +48,8 @@ java -jar mybatis.jar -configfile generatorConfig.xml -overwrite
  			<property name="enableSubPackages" value="true" /> 
 			<property name="isMergeable" value="false"/>
  		</sqlMapGenerator>
+		
+		<javaServiceImplGenerator targetPackage="" targetProject=""
  		
  		<!-- 在ibatis2 中是dao层，但在mybatis3中，其实就是mapper接口 -->
  		<javaClientGenerator type="XMLMAPPER" targetPackage="store.bymin.user.dao" targetProject="bymin-user-core/src/main/java">

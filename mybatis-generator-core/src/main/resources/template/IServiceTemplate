@@ -1,0 +1,41 @@
+package ${templatePackage};
+
+import com.xmigc.dto.PageResult;
+import com.xmigc.dto.Result;
+import com.xmigc.entity.${modelClazz};
+
+import java.util.Map;
+
+
+public interface ${className} {
+
+    /**
+     * 创建
+     *
+     * @param ${modelName}
+     */
+    Result create${modelClazz}(Button ${modelName});
+
+    /**
+     * 删除
+     *
+     * @param ids id
+     * @return
+     */
+    Result delete${modelClazz}(String ids);
+
+    /**
+     * 修改
+     *
+     * @param button id
+     * @return
+     */
+    Result update${modelClazz}(Button ${modelName});
+
+    /**
+     * 查询
+     * @param parameterMap 参数
+     * @return
+     */
+    PageResult query${modelClazz}s(Map<String, String> parameterMap);
+}
