@@ -32,10 +32,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.mybatis.generator.codegen.RootClassInfo;
-import org.mybatis.generator.codegen.freemarker.JavaDomainGenerator;
-import org.mybatis.generator.codegen.freemarker.JavaIServiceGenerator;
-import org.mybatis.generator.codegen.freemarker.JavaServiceGenerator;
-import org.mybatis.generator.codegen.freemarker.JavaServiceImplGenerator;
+import org.mybatis.generator.codegen.freemarker.*;
+import org.mybatis.generator.codegen.freemarker.TemplateEntity.ControllerTemplateEntity;
 import org.mybatis.generator.codegen.freemarker.TemplateEntity.IServiceTemplateEntity;
 import org.mybatis.generator.codegen.freemarker.TemplateEntity.ServiceImplTemplateEntity;
 import org.mybatis.generator.codegen.freemarker.TemplateEntity.ServiceTemplateEntity;
@@ -278,8 +276,9 @@ public class MyBatisGenerator {
         }
 
         /**
-         * 如果JavaServiceGeneratorConfiguration存在则调用相关方法
-         * 如果JavaDomainGeneratorConfiguration存在则调用相关方法
+         * 如果JavaServiceImplGeneratorConfiguration存在则调用相关方法
+         * 如果JavaIServiceGeneratorConfiguration存在则调用相关方法
+         * 如果JavaControllerGeneratorConfiguration存在则调用相关方法
          */
 
         for (Context c:configuration.getContexts()) {
@@ -288,6 +287,9 @@ public class MyBatisGenerator {
             }
             if (c.getJavaIServiceGeneratorConfiguration() != null) {
                 JavaIServiceGenerator.addJavaIServiceGenerator(assignmentIServiceTemplateEntity());
+            }
+            if (c.getJavaControllerGeneratorConfiguration() != null) {
+                JavaControllerGenerator.addJavaControllerGenerator(assignmentControllerTemplateEntity());
             }
         }
 
@@ -366,7 +368,7 @@ public class MyBatisGenerator {
                 }
                 String domainObjectName = this.getDomainObjectName(t);
                 IServiceTemplateEntity iServiceTemplateEntity = new IServiceTemplateEntity();
-                iServiceTemplateEntity.setClassName("I"+domainObjectName+"Service");
+                iServiceTemplateEntity.setClassName(domainObjectName+"Service");
                 String projectTargetPackage = jgc.getTargetProject()+"/"+jgc.getTargetPackage().replaceAll("\\.","/")+"/";
                 iServiceTemplateEntity.setProjectTargetPackage(projectTargetPackage);
                 iServiceTemplateEntity.setTemplatePackage(jgc.getTargetPackage());
@@ -377,6 +379,37 @@ public class MyBatisGenerator {
         }
         return iServiceTemplateEntities;
     }
+
+    public List<ControllerTemplateEntity> assignmentControllerTemplateEntity(){
+        List<Context> contexts = configuration.getContexts();
+        List<ControllerTemplateEntity> controllerTemplateEntities = new ArrayList();
+        boolean flag;
+        for (Context c:contexts){
+            JavaControllerGeneratorConfiguration jgc = c.getJavaControllerGeneratorConfiguration();
+            List<TableConfiguration> tableConfigurations = c.getTableConfigurations();
+            for (TableConfiguration t:tableConfigurations){
+                flag = false;
+                for (GeneratedJavaFile gjf : generatedJavaFiles) {
+                    if (gjf.getFileName().contains("WithBLOBs")&& gjf.getFileName().contains(t.getDomainObjectName())) {
+                        flag = true;
+                        break;
+                    }
+                }
+                String domainObjectName = this.getDomainObjectName(t);
+                ControllerTemplateEntity controllerTemplateEntity = new ControllerTemplateEntity();
+                controllerTemplateEntity.setClassName(domainObjectName+"Controller");
+                String projectTargetPackage = jgc.getTargetProject()+"/"+jgc.getTargetPackage().replaceAll("\\.","/")+"/";
+                controllerTemplateEntity.setProjectTargetPackage(projectTargetPackage);
+                controllerTemplateEntity.setTemplatePackage(jgc.getTargetPackage());
+                controllerTemplateEntity.setModelName(Character.toLowerCase(domainObjectName.charAt(0)) + domainObjectName.substring(1));
+                controllerTemplateEntity.setModelClazz(domainObjectName);
+                controllerTemplateEntities.add(controllerTemplateEntity);
+            }
+        }
+        return controllerTemplateEntities;
+    }
+
+
 
     public String getDomainObjectName(TableConfiguration t) {
         if (stringHasValue(t.getDomainObjectName())) {

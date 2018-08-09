@@ -14,7 +14,7 @@ public interface ${className} {
      *
      * @param ${modelName}
      */
-    Result create${modelClazz}(Button ${modelName});
+    Result create${modelClazz}(${modelClazz} ${modelName});
 
     /**
      * 删除
@@ -27,13 +27,14 @@ public interface ${className} {
     /**
      * 修改
      *
-     * @param button id
+     * @param ${modelName} id
      * @return
      */
-    Result update${modelClazz}(Button ${modelName});
+    Result update${modelClazz}(${modelClazz} ${modelName});
 
     /**
      * 查询
+     *
      * @param parameterMap 参数
      * @return
      */

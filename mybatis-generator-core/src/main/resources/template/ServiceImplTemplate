@@ -6,7 +6,7 @@ import com.xmigc.dto.PageResult;
 import com.xmigc.dto.Result;
 import ${modelPackage};
 import com.xmigc.entity.${modelClazz}Example;
-import com.xmigc.service.I${modelClazz}Service;
+import com.xmigc.service.${modelClazz}Service;
 import io.jsonwebtoken.lang.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,23 +17,26 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class ${className} extends BaseService implements I${modelClazz}Service {
+public class ${className} extends BaseService implements ${modelClazz}Service {
 
     @Autowired
     private ${mapperType} ${mapperName};
 
     @Override
+    @Transactional
     public Result create${modelClazz}(${modelClazz} ${modelName}) {
-        int i = ${mapperName}.insert(${modelName});
+        super.setCreateInfo(${modelName});
+        int i = ${mapperName}.insertSelective(${modelName});
         if (i > 0) {
-            return Result.success("删除成功");
+            return Result.success("创建成功");
         } else {
-            return Result.failed("删除失败");
+            return Result.failed("创建失败");
         }
     }
 
 
     @Override
+    @Transactional
     public Result delete${modelClazz}(String ids) {
         String[] p = ids.split(",");
         List<Long> list = Collections.arrayToList(p);
@@ -42,7 +45,7 @@ public class ${className} extends BaseService implements I${modelClazz}Service {
         criteria.andIdIn(list);
         int i = ${mapperName}.deleteByExample(${modelName}Example);
         if (i > 0) {
-            return Result.success("删除成功");
+            return Result.success("成功，" + i + "条数据被删除。");
         } else {
             return Result.failed("删除失败");
         }
@@ -51,11 +54,12 @@ public class ${className} extends BaseService implements I${modelClazz}Service {
     @Override
     @Transactional
     public Result update${modelClazz}(${modelClazz} ${modelName}) {
-        int i = ${mapperName}.updateByPrimaryKey(${modelName});
+        super.setUpdateInfo(${modelName});
+        int i = ${mapperName}.updateByPrimaryKeySelective(${modelName});
         if (i > 0) {
-            return Result.success("修改成功");
+            return Result.success("成功修改" + i + "条数据");
         } else {
-            return Result.failed("修改失败");
+            return Result.failed("数据没有发生任何变化");
         }
     }
 

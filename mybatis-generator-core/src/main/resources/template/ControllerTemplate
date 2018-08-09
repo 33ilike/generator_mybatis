@@ -1,0 +1,67 @@
+package ${templatePackage};
+
+import com.xmigc.dto.PageResult;
+import com.xmigc.dto.Result;
+import com.xmigc.entity.${modelClazz};
+import com.xmigc.service.${modelClazz}Service;
+import com.xmigc.common.utils.Commons;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
+
+@Controller
+@RequestMapping(value = "/${modelName}")
+public class ${modelClazz}Controller extends BaseController {
+
+    @Autowired
+    private ${modelClazz}Service ${modelName}Service;
+
+    /**
+     * 新增或修改
+     *
+     * @param ${modelName} 自动封装的${modelClazz}对象
+     * @return
+     */
+    @RequestMapping(value = "/addOrModify", method = {RequestMethod.PUT, RequestMethod.POST})
+    @ResponseBody
+    public Result addOrModify(@RequestBody ${modelClazz} ${modelName}) {
+        // 如果有id说明是进行修改，调用修改的service
+        if (null != ${modelName}.getId()) {
+            return ${modelName}Service.update${modelClazz}(${modelName});
+        }
+        // 创建${modelClazz}
+        return ${modelName}Service.create${modelClazz}(${modelName});
+    }
+
+    /**
+     * 删
+     *
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = "/remove", method = RequestMethod.DELETE, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public Result remove(@RequestBody Map<String, String> map) {
+        return ${modelName}Service.delete${modelClazz}(map.get("ids"));
+    }
+
+    /**
+     * 查
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/get", method = RequestMethod.GET)
+    @ResponseBody
+    public PageResult get(HttpServletRequest request) {
+        Map<String, String> parameterMap = Commons.getParameterStringMap(request);
+        return ${modelName}Service.query${modelClazz}s(parameterMap);
+    }
+
+}
