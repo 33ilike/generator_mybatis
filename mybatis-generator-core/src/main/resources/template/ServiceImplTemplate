@@ -1,83 +1,14 @@
 package ${templatePackage};
 
-import com.github.pagehelper.PageInfo;
+import com.xmigc.common.service.CrudSerivce;
 import ${mapperPackage};
-import com.xmigc.dto.PageResult;
-import com.xmigc.dto.Result;
 import ${modelPackage};
 import com.xmigc.entity.${modelClazz}Example;
 import com.xmigc.service.${modelClazz}Service;
-import io.jsonwebtoken.lang.Collections;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Service
-public class ${className} extends BaseService implements ${modelClazz}Service {
-
-    @Autowired
-    private ${mapperType} ${mapperName};
-
-    @Override
-    @Transactional
-    public Result create${modelClazz}(${modelClazz} ${modelName}) {
-        super.setCreateInfo(${modelName});
-        int i = ${mapperName}.insertSelective(${modelName});
-        if (i > 0) {
-            return Result.success("创建成功");
-        } else {
-            return Result.failed("创建失败");
-        }
-    }
-
-
-    @Override
-    @Transactional
-    public Result delete${modelClazz}(String ids) {
-        String[] p = ids.split(",");
-        List<Long> list = Collections.arrayToList(p);
-        ${modelClazz}Example ${modelName}Example = new ${modelClazz}Example();
-        ${modelClazz}Example.Criteria criteria = ${modelName}Example.createCriteria();
-        criteria.andIdIn(list);
-        int i = ${mapperName}.deleteByExample(${modelName}Example);
-        if (i > 0) {
-            return Result.success("成功，" + i + "条数据被删除。");
-        } else {
-            return Result.failed("删除失败");
-        }
-    }
-
-    @Override
-    @Transactional
-    public Result update${modelClazz}(${modelClazz} ${modelName}) {
-        super.setUpdateInfo(${modelName});
-        int i = ${mapperName}.updateByPrimaryKeySelective(${modelName});
-        if (i > 0) {
-            return Result.success("成功修改" + i + "条数据");
-        } else {
-            return Result.failed("数据没有发生任何变化");
-        }
-    }
-
-    @Override
-    public PageResult query${modelClazz}s(Map<String, String> parameterMap) {
-        // 通过反射设置查询条件，大致这样，有待完善
-        ${modelClazz}Example ${modelName}Example = super.getCriteria("com.xmigc.entity.${modelClazz}", "com.xmigc.entity.${modelClazz}Example$Criteria", parameterMap);
-        // 查询
-        List ${modelName}s = ${mapperName}.selectByExample(${modelName}Example);
-        // 分页信息
-        PageInfo<${modelClazz}> ${modelName}PageInfo = new PageInfo<>(${modelName}s);
-        //封装分页信息
-        Map<String, Object> pagination = new HashMap<>();
-        pagination.put("total", ${modelName}PageInfo.getTotal());
-        pagination.put("pageSize", ${modelName}PageInfo.getPageSize());
-        pagination.put("current", ${modelName}PageInfo.getPageNum());
-        // 返回结果
-        return new PageResult(0, "查询成功", ${modelName}s, pagination);
-    }
+public class ${className} extends CrudSerivce<${modelClazz}Mapper, ${modelClazz}, ${modelClazz}Example> implements ${modelClazz}Service {
 
 }

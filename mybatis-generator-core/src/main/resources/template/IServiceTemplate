@@ -4,39 +4,29 @@ import com.xmigc.dto.PageResult;
 import com.xmigc.dto.Result;
 import com.xmigc.entity.${modelClazz};
 
+import java.util.List;
 import java.util.Map;
 
 
 public interface ${className} {
 
-    /**
-     * 创建
-     *
-     * @param ${modelName}
-     */
-    Result create${modelClazz}(${modelClazz} ${modelName});
+    ${modelClazz} get(Long id);
 
-    /**
-     * 删除
-     *
-     * @param ids id
-     * @return
-     */
-    Result delete${modelClazz}(String ids);
+    ${modelClazz} get(${modelClazz} entity);
 
-    /**
-     * 修改
-     *
-     * @param ${modelName} id
-     * @return
-     */
-    Result update${modelClazz}(${modelClazz} ${modelName});
+    List<${modelClazz}> findList(${modelClazz}Example example);
 
-    /**
-     * 查询
-     *
-     * @param parameterMap 参数
-     * @return
-     */
-    PageResult query${modelClazz}s(Map<String, String> parameterMap);
+    PageResult findPage(Class<?> entityClazz, Class<?> exampleClass, Map<String, String> parameterMap);
+
+    Result save(${modelClazz} entity);
+
+    Result saveBatch(List<${modelClazz}> list);
+
+    Result update(${modelClazz} entity);
+
+    Result updateBatch(List<${modelClazz}> list);
+
+    Result delete(String ids, Class<?> exampleClass);
+
+    Result delete(Long id);
 }

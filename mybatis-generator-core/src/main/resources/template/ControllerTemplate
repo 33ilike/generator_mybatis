@@ -3,6 +3,7 @@ package ${templatePackage};
 import com.xmigc.dto.PageResult;
 import com.xmigc.dto.Result;
 import com.xmigc.entity.${modelClazz};
+import com.xmigc.entity.${modelClazz}Example;
 import com.xmigc.service.${modelClazz}Service;
 import com.xmigc.common.utils.Commons;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +34,10 @@ public class ${modelClazz}Controller extends BaseController {
     public Result addOrModify(@RequestBody ${modelClazz} ${modelName}) {
         // 如果有id说明是进行修改，调用修改的service
         if (null != ${modelName}.getId()) {
-            return ${modelName}Service.update${modelClazz}(${modelName});
+            return ${modelName}Service.update(${modelName});
         }
         // 创建${modelClazz}
-        return ${modelName}Service.create${modelClazz}(${modelName});
+        return ${modelName}Service.save(${modelName});
     }
 
     /**
@@ -48,7 +49,7 @@ public class ${modelClazz}Controller extends BaseController {
     @RequestMapping(value = "/remove", method = RequestMethod.DELETE, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public Result remove(@RequestBody Map<String, String> map) {
-        return ${modelName}Service.delete${modelClazz}(map.get("ids"));
+        return ${modelName}Service.delete(map.get("ids"), ${modelClazz}Example.class);
     }
 
     /**
@@ -61,7 +62,7 @@ public class ${modelClazz}Controller extends BaseController {
     @ResponseBody
     public PageResult get(HttpServletRequest request) {
         Map<String, String> parameterMap = Commons.getParameterStringMap(request);
-        return ${modelName}Service.query${modelClazz}s(parameterMap);
+        return ${modelName}Service.findPage(${modelClazz}.class,  ${modelClazz}Example.class, parameterMap);
     }
 
 }
